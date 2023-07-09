@@ -36,7 +36,6 @@
     "@types/lodash.mergewith": "^4.6.7",
     "@types/lodash.uniqwith": "^4.5.7",
     "@types/node": "^20.4.0",
-    "@types/rimraf": "^4.0.5",
     "@types/uuid": "^9.0.2",
     "@typescript-eslint/eslint-plugin": "^5.50.0",
     "@typescript-eslint/parser": "^5.61.0",

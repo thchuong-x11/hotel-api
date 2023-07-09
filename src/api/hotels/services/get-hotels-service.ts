@@ -8,6 +8,7 @@ import { mergeString, mergeStringArrayKeepUnique } from '../../../utils/merge';
 import { mergeHotelAmenities } from '../helpers/merge-hotel-amenities';
 import { mergeHotelImages } from '../helpers/merge-hotel-images';
 import { mergeHotelLocation } from '../helpers/merge-hotel-location';
+import { GetHotelsInternalParams, GetHotelsParams } from '../interfaces/get-hotels-api.interface';
 import { Hotel } from '../interfaces/hotel.interface';
 
 export class GetHotelsService {
@@ -33,12 +34,18 @@ export class GetHotelsService {
     this.patagoniaClient = patagoniaClient ?? new PatagoniaClient(logger);
   }
 
-  async run(): Promise<Array<Hotel>> {
+  async run(params: GetHotelsParams): Promise<Array<Hotel>> {
     try {
+      const internalParams: GetHotelsInternalParams =
+        'destination' in params
+          ? { destination: params.destination }
+          : 'hotels' in params
+          ? { hotels: new Set(params.hotels) }
+          : {};
       const [acmeHotelsRes, patagoniaHotelsRes, paperfliesHotelsRes] = await Promise.allSettled([
-        this.acmeClient.get(),
-        this.patagoniaClient.get(),
-        this.paperfliesClient.get(),
+        this.acmeClient.get(internalParams),
+        this.patagoniaClient.get(internalParams),
+        this.paperfliesClient.get(internalParams),
       ]);
 
       return this.mergeHotelsInfos({
